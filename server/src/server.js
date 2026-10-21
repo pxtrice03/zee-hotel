@@ -4,7 +4,7 @@ import { readFile, writeFile } from './utils/data.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
-// importing routes
+// Importing routes
 import reservationRouter from './routes/route.reservations.js'
 
 // THis loads the '.env' content into 'process.env'

@@ -1,0 +1,123 @@
+[
+    {
+        "id": 1,
+        "roomNumber": "101",
+        "type": "Single",
+        "name": "Standard Single Room",
+        "price": 45000,
+        "currency": "XAF",
+        "capacity": 1,
+        "beds": 1,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Private Bathroom"
+        ],
+        "images": []
+    },
+    {
+        "id": 2,
+        "roomNumber": "101",
+        "type": "Single",
+        "name": "Standard Single Room",
+        "price": 45000,
+        "currency": "XAF",
+        "capacity": 1,
+        "beds": 1,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Private Bathroom"
+        ],
+        "images": []
+    },
+    {
+        "id": 3,
+        "roomNumber": "101",
+        "type": "Single",
+        "name": "Standard Single Room",
+        "price": 45000,
+        "currency": "XAF",
+        "capacity": 1,
+        "beds": 1,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Private Bathroom"
+        ],
+        "images": []
+    },
+    {
+        "id": 4,
+        "roomNumber": "201",
+        "type": "Double",
+        "name": "Deluxe Double Room",
+        "price": 75000,
+        "currency": "XAF",
+        "capacity": 2,
+        "beds": 2,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Private Bathroom"
+        ],
+        "images": []
+    },
+    {
+        "id": 5,
+        "roomNumber": "201",
+        "type": "Double",
+        "name": "Deluxe Double Room",
+        "price": 75000,
+        "currency": "XAF",
+        "capacity": 2,
+        "beds": 2,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Private Bathroom"
+        ],
+        "images": []
+    },
+    {
+        "id": 6,
+        "roomNumber": "201",
+        "type": "Double",
+        "name": "Deluxe Double Room",
+        "price": 75000,
+        "currency": "XAF",
+        "capacity": 2,
+        "beds": 2,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Private Bathroom"
+        ],
+        "images": []
+    },
+    {
+        "id": 7,
+        "roomNumber": "301",
+        "type": "Suite",
+        "name": "Executive Suite",
+        "price": 120000,
+        "currency": "XAF",
+        "capacity": 4,
+        "beds": 2,
+        "amenities": [
+            "WiFi",
+            "TV",
+            "Air Conditioning",
+            "Mini Bar",
+            "Private Bathroom",
+            "Balcony"
+        ],
+        "images": []
+    }
+]
