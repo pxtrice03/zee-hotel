@@ -9,12 +9,16 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.join(__dirname, './src')
+      '@': path.join(__dirname, './src'),
+      '@components': path.join(__dirname, './src/components'),
+      '@layout': path.join(__dirname, './src/layout'),
+      '@routes': path.join(__dirname, './src/routes'),
+      '@styles': path.join(__dirname, './src/styles')
     }
   },
   server: {
     proxy: {
-      '/reservations': 'https://localhost:3000'
+      '/api': 'https://localhost:3000'
     }
   }
 })

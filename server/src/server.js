@@ -1,9 +1,11 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import { readFile, writeFile } from './utils/data.js'
-import { isBlank } from './utils/validate.js'
 import path from 'path'
 import { fileURLToPath } from 'url'
+
+// importing routes
+import reservationRouter from './routes/route.reservations.js'
 
 // THis loads the '.env' content into 'process.env'
 dotenv.config()
@@ -19,82 +21,12 @@ const clientDist = path.join(dirname, '..', '..', 'client')
 // Use the client folder path to serve it as the project's frontend
 app.use(express.static(clientDist))
 
+// Here hepls use all the routes created in the routes folder
+app.use('/api/reservations', reservationRouter)
+// app.use('/api/rooms', roomsRouter)
+
 app.get('/*splat', (req, res) => {
     res.sendFile(path.join(clientDist, 'index.html'))
-})
-
-// GET all reservations
-app.get('/reservations', (req, res) => {
-    const reservations = readFile()
-
-    if(reservations.length === 0) {
-        return res.status(204).json({
-            message: 'Aucune donnees a charger.'
-        })
-    }
-    res.status(200).json(reservations)
-})
-
-// POST (create) a reservation
-app.post('/reservations', (req, res) => {
-    const {
-        fullName: fname,
-        email: email,
-        phoneNumber: tel,
-        roomType: roomType,
-        checkInDate: checkInD,
-        checkOutDate: checkOutD,
-        numberOfGuests: guests,
-        paymentMethod: payment
-    } = req.body
-
-        if (
-            isBlank(fname) ||
-            isBlank(email) ||
-            isBlank(tel) ||
-            isBlank(roomType) ||
-            isBlank(checkInD) ||
-            isBlank(checkOutD) ||
-            isBlank(payment) ||
-            !Number.isInteger(guests) ||
-            guests < 1
-        ) {
-            return res.status(400).json({
-                error: 'Tous les champs doivent avoir des valeurs valides.'
-            })
-        }
-
-    // Load data
-    const reservations = readFile()
-
-    const newReservation = {
-        id: reservations.length ? Math.max(...reservations.map((r) => r.id)) + 1 : 1,
-        fullName: fname,
-        email: email,
-        phoneNumber: tel,
-        roomType: roomType,
-        checkInDate: checkInD,
-        checkOutDate: checkOutD,
-        numberOfGuests: guests,
-        paymentMethod: payment
-    }
-
-    // add new reservation to the array of reservations
-    reservations.push(newReservation)
-    // save it in the JSON file
-    writeFile(reservations)
-
-    res.status(201).json({
-        message: "La reservation a ete enregistrer.",
-        record: newReservation
-    })
-})
-
-// GET a reservation by its ID
-app.get('/reservations/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const reservations = readFile()
-    
 })
 
 app.listen(PORT, () => {
