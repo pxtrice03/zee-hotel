@@ -91,7 +91,9 @@ router.put('/:id', (req, res) => {
         const index = reservations.findIndex((r) => r.id === req.reservationId)
 
         if (index === -1) {
-            return res.status(404).json({ error: 'Reservation introuvable.' })
+            return res.status(404).json({
+                error: 'Reservation introuvable.'
+            })
         }
 
         const updated = {
