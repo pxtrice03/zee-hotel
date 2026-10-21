@@ -1,46 +1,50 @@
 [
   {
     "id": 1,
-    "fullName": "Kevyn Rodensia",
+    "roomId": 3,
+    "guestName": "Kevyn Rodensia",
     "email": "rodensia@gmail.com",
-    "phoneNumber": "678901234",
-    "roomType": "Suite",
-    "checkInDate": "2026-10-18",
-    "checkOutDate": "2026-10-29",
-    "numberOfGuests": 3,
-    "paymentMethod": "Card"
+    "phone": "678901234",
+    "checkIn": "2026-10-18",
+    "checkOut": "2026-10-29",
+    "guests": 3,
+    "paymentMethod": "Card",
+    "status": "confirmed"
   },
   {
     "id": 2,
-    "fullName": "Mitsourhi Byers",
+    "roomId": 4,
+    "guestName": "Mitsourhi Byers",
     "email": "mitsourhi@gmail.com",
-    "phoneNumber": "692826735",
-    "roomType": "Single Room",
-    "checkInDate": "2026-09-10",
-    "checkOutDate": "2026-09-30",
-    "numberOfGuests": 1,
-    "paymentMethod": "Mobile Money"
+    "phone": "692826735",
+    "checkIn": "2026-09-10",
+    "checkOut": "2026-09-30",
+    "guests": 1,
+    "paymentMethod": "Mobile Money",
+    "status": "confirmed"
   },
   {
     "id": 3,
-    "fullName": "Vincent Faller",
+    "roomId": 2,
+    "guestName": "Vincent Faller",
     "email": "vincefaller@gmail.com",
-    "phoneNumber": "655293409",
-    "roomType": "Double Room",
-    "checkInDate": "2026-03-01",
-    "checkOutDate": "2026-11-03",
-    "numberOfGuests": 2,
-    "paymentMethod": "Cash"
+    "phone": "655293409",
+    "checkIn": "2026-03-01",
+    "checkOut": "2026-11-03",
+    "guests": 2,
+    "paymentMethod": "Cash",
+    "status": "confirmed"
   },
   {
     "id": 4,
-    "fullName": "Michael Dupont",
+    "roomId": 7,
+    "guestName": "Michael Dupont",
     "email": "michael070@gmail.com",
-    "phoneNumber": "621762892",
-    "roomType": "Single Room",
-    "checkInDate": "2026-12-01",
-    "checkOutDate": "2026-12-04",
-    "numberOfGuests": 1,
-    "paymentMethod": "Card"
+    "phone": "621762892",
+    "checkIn": "2026-12-01",
+    "checkOut": "2026-12-04",
+    "guests": 1,
+    "paymentMethod": "Card",
+    "status": "confirmed"
   }
 ]
