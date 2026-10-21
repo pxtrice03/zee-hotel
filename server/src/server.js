@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import { readFile, writeFile } from './utils/data.js'
+import { isBlank } from './utils/validate.js'
 import path from 'path'
-import fs, { read } from 'fs'
 import { fileURLToPath } from 'url'
 
 // THis loads the '.env' content into 'process.env'
@@ -12,25 +13,14 @@ const PORT = process.env.PORT || 5000 // uses 'PORT' value constant if available
 
 app.use(express.json())
 
-// import.meta.url: gives the URL of the current module
-// this line converts the URL into a normal filesystem path
-const filename = fileURLToPath(import.meta.url)
-// gives the path to this directory
-const dirname = path.dirname(filename)
-const filePath = path.join(dirname, 'data', 'reservations.json')
+const dirname = path.join(fileURLToPath(import.meta.url))
+// Get the actual path to the client folder
+const clientDist = path.join(dirname, '..', '..', 'client')
+// Use the client folder path to serve it as the project's frontend
+app.use(express.static(clientDist))
 
-// helper functions
-const readFile = () => {
-    const rawData = fs.readFileSync(filePath, 'utf-8')
-    return JSON.parse(rawData)
-}
-
-const writeFile = (reservations) => {
-    fs.writeFileSync(filePath, JSON.stringify(reservations, null, 2), 'utf-8')
-}
-
-app.get('/', (req, res) => {
-    res.send('Express Server!')
+app.get('/*splat', (req, res) => {
+    res.sendFile(path.join(clientDist, 'index.html'))
 })
 
 // GET all reservations
@@ -47,24 +37,32 @@ app.get('/reservations', (req, res) => {
 
 // POST (create) a reservation
 app.post('/reservations', (req, res) => {
-    const { fname, email, tel, roomType, checkInD, checkOutD, guests, payment } = req.body
+    const {
+        fullName: fname,
+        email: email,
+        phoneNumber: tel,
+        roomType: roomType,
+        checkInDate: checkInD,
+        checkOutDate: checkOutD,
+        numberOfGuests: guests,
+        paymentMethod: payment
+    } = req.body
 
-    if(
-        typeof fname === 'string' ||
-        fname.trim() === '' ||
-        email.trim() === '' ||
-        tel.trim() === '' ||
-        roomType.trim() === '' ||
-        checkInD.trim() === '' ||
-        checkOutD.trim() === '' ||
-        !Number.isInteger(guests) ||
-        guests < 1 ||
-        payment.trim() === ''
-    ) {
-        return res.status(400).json({
-            message: 'Tous les champs doivent avoir des valeurs valide.'
-        })
-    }
+        if (
+            isBlank(fname) ||
+            isBlank(email) ||
+            isBlank(tel) ||
+            isBlank(roomType) ||
+            isBlank(checkInD) ||
+            isBlank(checkOutD) ||
+            isBlank(payment) ||
+            !Number.isInteger(guests) ||
+            guests < 1
+        ) {
+            return res.status(400).json({
+                error: 'Tous les champs doivent avoir des valeurs valides.'
+            })
+        }
 
     // Load data
     const reservations = readFile()
