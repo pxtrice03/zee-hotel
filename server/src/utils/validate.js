@@ -1,3 +1,5 @@
+const VALID_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
 export const isBlank = (v) => typeof v !== 'string' || v.trim() === ''
 
 // Returns an error message, or null if the body (from req.body) is valid
