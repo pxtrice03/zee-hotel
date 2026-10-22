@@ -1,10 +1,8 @@
 import { Router } from 'express'
 import { readFile, writeFile } from '../utils/data.js'
-import { isBlank, validateReservation, pickFields } from '../utils/validate.js'
+import { validateReservation, pickFields } from '../utils/validate.js'
 
 const router = Router()
-
-const VALID_EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 // Validates :id once for every route that uses it
 router.param('id', (req, res, next, value) => {
@@ -17,10 +15,10 @@ router.param('id', (req, res, next, value) => {
 })
 
 // GET all reservations
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
     try {
         // Load data
-        res.status(200).json(readFile())
+        res.status(200).json(await readFile())
     } catch (err) {
         console.error(err)
         res.status(500).json({
@@ -30,22 +28,27 @@ router.get('/', (req, res) => {
 })
 
 // GET a reservation
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
     try {
-        const reservation = readFile().find((r) => r.id === req.reservationId)
+        const reservations = await readFile()
+        const reservation = reservations.find((r) => r.id === req.reservationId)
 
         if (!reservation) {
-            return res.status(404).json({ error: 'Reservation introuvable.' })
+            return res.status(404).json({
+                error: 'Reservation introuvable.'
+            })
         }
         res.status(200).json(reservation)
     } catch (err) {
         console.error(err)
-        res.status(500).json({ error: 'Erreur lors de la lecture des donnees.' })
+        res.status(500).json({
+            error: 'Erreur lors de la lecture des donnees.'
+        })
     }
 })
 
 // POST (create) a reservation
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
     const error = validateReservation(req.body)
     if (error) {
         return res.status(400).json({
@@ -55,7 +58,7 @@ router.post('/', (req, res) => {
 
     try {
         // Load data
-        const reservations = readFile()
+        const reservations = await readFile()
 
         const newReservation = {
             id: reservations.length ? Math.max(...reservations.map((r) => r.id)) + 1 : 1,
@@ -65,7 +68,7 @@ router.post('/', (req, res) => {
         // Add the new reservation to the data (array of reservations)
         reservations.push(newReservation)
         // Write to file (in-memory DB)
-        writeFile(reservations)
+        await writeFile(reservations)
 
         res.status(201).json({
             message: 'La reservation a ete enregistree.',
@@ -79,15 +82,58 @@ router.post('/', (req, res) => {
     }
 })
 
+// PATCH (partial update)
+router.patch('/:id', async (req, res) => {
+    const body = req.body
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+        return res.status(400).json({ error: 'Corps de requete invalide.' })
+    }
+
+    // Keep only whitelisted fields that were actually sent
+    const changes = Object.fromEntries(
+        Object.entries(pickFields(body)).filter(([, v]) => v !== undefined)
+    )
+    if (Object.keys(changes).length === 0) {
+        return res.status(400).json({ error: 'Aucun champ a modifier.' })
+    }
+
+    try {
+        const reservations = await readFile()
+        const index = reservations.findIndex((r) => r.id === req.reservationId)
+
+        if (index === -1) {
+            return res.status(404).json({ error: 'Réservation introuvable.' })
+        }
+
+        // Merge, then validate the full result with the existing validator
+        const updated = { ...reservations[index], ...changes, id: req.reservationId }
+        const error = validateReservation(updated)
+        if (error) {
+            return res.status(400).json({ error })
+        }
+
+        reservations[index] = updated
+        await writeFile(reservations)
+
+        res.status(200).json({
+            message: 'La réservation a été modifiée.',
+            record: updated,
+        })
+    } catch (err) {
+        console.error(err)
+        res.status(500).json({ error: 'Erreur lors de la modification.' })
+    }
+})
+
 // PUT (full update)
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
     const error = validateReservation(req.body)
     if (error) {
         return res.status(400).json({ error })
     }
 
     try {
-        const reservations = readFile()
+        const reservations = await readFile()
         const index = reservations.findIndex((r) => r.id === req.reservationId)
 
         if (index === -1) {
@@ -101,7 +147,7 @@ router.put('/:id', (req, res) => {
             ...pickFields(req.body)
         }
         reservations[index] = updated
-        writeFile(reservations)
+        await writeFile(reservations)
 
         res.status(200).json({
             message: 'La reservation a ete modifiee.',
@@ -114,9 +160,9 @@ router.put('/:id', (req, res) => {
 })
 
 // DELETE a reservation
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
     try {
-        const reservations = readFile()
+        const reservations = await readFile()
         const index = reservations.findIndex((r) => r.id === req.reservationId)
 
         if (index === -1) {
@@ -124,7 +170,7 @@ router.delete('/:id', (req, res) => {
         }
 
         const [deleted] = reservations.splice(index, 1)
-        writeFile(reservations)
+        await writeFile(reservations)
 
         res.status(200).json({
             message: 'La reservation a ete supprimee.',
